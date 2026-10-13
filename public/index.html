@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Apex Store | CodeAlpha Full Stack E-Commerce</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+  <!-- Top Notification Bar -->
+  <div class="top-bar">
+    <div class="container top-bar-content">
+      <span><i class="fa-solid fa-graduation-cap"></i> <strong>CodeAlpha Internship Task 1</strong>: Full Stack E-commerce Application</span>
+      <span class="intern-tag">Intern: Redeemer Jerrey Kow Williams (CA/DF1/320453)</span>
+    </div>
+  </div>
+
+  <!-- Navigation -->
+  <header class="navbar">
+    <div class="container nav-content">
+      <div class="logo" onclick="app.setCategory('All')">
+        <i class="fa-solid fa-bag-shopping logo-icon"></i>
+        <span>Apex<strong>Store</strong></span>
+      </div>
+
+      <div class="search-bar">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input type="text" id="searchInput" placeholder="Search gadgets, accessories, apparel..." oninput="app.handleSearch()">
+      </div>
+
+      <nav class="nav-actions">
+        <div id="authContainer">
+          <button class="btn btn-outline" onclick="app.openAuthModal('login')">
+            <i class="fa-regular fa-user"></i> Sign In
+          </button>
+        </div>
+
+        <button class="cart-btn" onclick="app.toggleCart(true)">
+          <i class="fa-solid fa-cart-shopping"></i>
+          <span class="cart-badge" id="cartBadge">0</span>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="container hero-grid">
+      <div class="hero-text">
+        <span class="badge badge-accent">Autumn Collection 2026</span>
+        <h1>Curated Essentials Designed for Modern Living</h1>
+        <p>Explore high-performance electronics, handcrafted fashion pieces, and artisanal lifestyle essentials with express delivery.</p>
+        <div class="hero-cta">
+          <a href="#products-section" class="btn btn-primary"><i class="fa-solid fa-arrow-down"></i> Explore Catalog</a>
+          <button class="btn btn-secondary" onclick="app.openOrdersModal()"><i class="fa-solid fa-clock-rotate-left"></i> My Orders</button>
+        </div>
+      </div>
+      <div class="hero-card">
+        <div class="feature-card">
+          <i class="fa-solid fa-shield-halved"></i>
+          <div>
+            <h4>Secure Checkout</h4>
+            <p>Encrypted order processing & buyer protection</p>
+          </div>
+        </div>
+        <div class="feature-card">
+          <i class="fa-solid fa-truck-fast"></i>
+          <div>
+            <h4>Free Shipping</h4>
+            <p>On all qualifying orders over $150</p>
+          </div>
+        </div>
+        <div class="feature-card">
+          <i class="fa-solid fa-arrows-rotate"></i>
+          <div>
+            <h4>30-Day Returns</h4>
+            <p>Hassle-free exchanges and money-back guarantee</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Catalog Section -->
+  <main class="container catalog-section" id="products-section">
+    <div class="catalog-header">
+      <div>
+        <h2>Featured Products</h2>
+        <p class="subtitle" id="catalogSubtitle">Showing all available inventory</p>
+      </div>
+
+      <div class="catalog-controls">
+        <div class="category-pills" id="categoryPills">
+          <button class="pill active" onclick="app.setCategory('All')">All</button>
+          <button class="pill" onclick="app.setCategory('Electronics')">Electronics</button>
+          <button class="pill" onclick="app.setCategory('Fashion')">Fashion</button>
+          <button class="pill" onclick="app.setCategory('Home')">Home</button>
+        </div>
+
+        <select id="sortSelect" class="select-sort" onchange="app.handleSort(this.value)">
+          <option value="featured">Featured</option>
+          <option value="price-low">Price: Low to High</option>
+          <option value="price-high">Price: High to Low</option>
+          <option value="rating">Highest Rated</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="products-grid" id="productsGrid">
+      <div class="loading-state">
+        <div class="spinner"></div>
+        <p>Loading products catalog...</p>
+      </div>
+    </div>
+  </main>
+
+  <!-- Cart Drawer -->
+  <div class="cart-overlay" id="cartOverlay" onclick="app.toggleCart(false)"></div>
+  <aside class="cart-drawer" id="cartDrawer">
+    <div class="cart-header">
+      <div class="cart-title">
+        <i class="fa-solid fa-cart-shopping"></i>
+        <h3>Your Shopping Cart</h3>
+      </div>
+      <button class="btn-close" onclick="app.toggleCart(false)"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+
+    <div class="cart-items" id="cartItems">
+      <!-- Injected via JavaScript -->
+    </div>
+
+    <div class="cart-footer" id="cartFooter">
+      <div class="cart-summary-line">
+        <span>Subtotal</span>
+        <span id="cartSubtotal">$0.00</span>
+      </div>
+      <div class="cart-summary-line">
+        <span>Estimated Tax (8%)</span>
+        <span id="cartTax">$0.00</span>
+      </div>
+      <div class="cart-summary-line">
+        <span>Shipping</span>
+        <span id="cartShipping">Calculated at checkout</span>
+      </div>
+      <div class="cart-summary-line total">
+        <span>Estimated Total</span>
+        <span id="cartTotal">$0.00</span>
+      </div>
+
+      <button class="btn btn-primary btn-block" onclick="app.openCheckout()">
+        <i class="fa-solid fa-lock"></i> Proceed to Checkout
+      </button>
+    </div>
+  </aside>
+
+  <!-- Product Details Modal -->
+  <div class="modal" id="productModal">
+    <div class="modal-backdrop" onclick="app.closeProductModal()"></div>
+    <div class="modal-content product-modal-content">
+      <button class="modal-close" onclick="app.closeProductModal()"><i class="fa-solid fa-xmark"></i></button>
+      <div id="productModalBody" class="product-modal-grid">
+        <!-- Injected via JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Checkout Modal -->
+  <div class="modal" id="checkoutModal">
+    <div class="modal-backdrop" onclick="app.closeCheckoutModal()"></div>
+    <div class="modal-content checkout-modal-content">
+      <button class="modal-close" onclick="app.closeCheckoutModal()"><i class="fa-solid fa-xmark"></i></button>
+      <h2>Complete Your Order</h2>
+      <p class="subtitle">Secure Order Processing & Fulfillment</p>
+
+      <form id="checkoutForm" onsubmit="app.processCheckout(event)" class="checkout-form">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Full Name *</label>
+            <input type="text" id="shipName" required placeholder="John Doe">
+          </div>
+          <div class="form-group">
+            <label>Email Address *</label>
+            <input type="email" id="shipEmail" required placeholder="john@example.com">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Delivery Address *</label>
+          <input type="text" id="shipAddress" required placeholder="123 Innovation Way, Suite 400">
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>City *</label>
+            <input type="text" id="shipCity" required placeholder="San Francisco">
+          </div>
+          <div class="form-group">
+            <label>Postal Code *</label>
+            <input type="text" id="shipZip" required placeholder="94105">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Payment Method</label>
+          <select id="paymentMethod" class="select-sort">
+            <option value="Credit / Debit Card">Credit / Debit Card (Mock Terminal)</option>
+            <option value="Apple Pay / Google Pay">Apple Pay / Google Pay</option>
+            <option value="Cash on Delivery">Cash on Delivery</option>
+          </select>
+        </div>
+
+        <div class="order-summary-box" id="checkoutSummaryBox">
+          <!-- Summary injected by JS -->
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-block btn-lg" id="btnPlaceOrder">
+          <i class="fa-solid fa-check"></i> Place Order Now
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Authentication Modal (Login / Register) -->
+  <div class="modal" id="authModal">
+    <div class="modal-backdrop" onclick="app.closeAuthModal()"></div>
+    <div class="modal-content auth-modal-content">
+      <button class="modal-close" onclick="app.closeAuthModal()"><i class="fa-solid fa-xmark"></i></button>
+
+      <div class="auth-tabs">
+        <button id="tabLogin" class="auth-tab active" onclick="app.switchAuthTab('login')">Sign In</button>
+        <button id="tabRegister" class="auth-tab" onclick="app.switchAuthTab('register')">Create Account</button>
+      </div>
+
+      <!-- Login Form -->
+      <form id="loginForm" onsubmit="app.handleLogin(event)" class="auth-form">
+        <div class="form-group">
+          <label>Email Address</label>
+          <input type="email" id="loginEmail" required placeholder="user@example.com">
+        </div>
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" id="loginPassword" required placeholder="••••••••">
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">Sign In</button>
+      </form>
+
+      <!-- Register Form -->
+      <form id="registerForm" onsubmit="app.handleRegister(event)" class="auth-form" style="display: none;">
+        <div class="form-group">
+          <label>Full Name</label>
+          <input type="text" id="regName" required placeholder="John Doe">
+        </div>
+        <div class="form-group">
+          <label>Email Address</label>
+          <input type="email" id="regEmail" required placeholder="user@example.com">
+        </div>
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" id="regPassword" required minlength="6" placeholder="At least 6 characters">
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">Create Account</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Orders Modal -->
+  <div class="modal" id="ordersModal">
+    <div class="modal-backdrop" onclick="app.closeOrdersModal()"></div>
+    <div class="modal-content orders-modal-content">
+      <button class="modal-close" onclick="app.closeOrdersModal()"><i class="fa-solid fa-xmark"></i></button>
+      <h2>My Order History</h2>
+      <p class="subtitle">Review confirmed orders and dispatch status</p>
+      <div id="ordersList" class="orders-list">
+        <!-- Injected via JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container footer-content">
+      <div>
+        <div class="logo">
+          <i class="fa-solid fa-bag-shopping logo-icon"></i>
+          <span>Apex<strong>Store</strong></span>
+        </div>
+        <p class="footer-desc">A full-stack e-commerce project built with Node.js, Express, HTML5, CSS3, and modern JavaScript.</p>
+      </div>
+      <div>
+        <h4>Project Details</h4>
+        <p><strong>CodeAlpha Internship Task 1</strong></p>
+        <p>Domain: Full Stack Web Development</p>
+        <p>Developer: Redeemer Jerrey Kow Williams</p>
+      </div>
+      <div>
+        <h4>Technologies</h4>
+        <p>Backend: Express.js REST API</p>
+        <p>Database: File-backed Persistent Store</p>
+        <p>Authentication: JWT & Bcrypt</p>
+      </div>
+    </div>
+    <div class="footer-bottom container">
+      <p>© 2026 CodeAlpha Internship Project. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
+
